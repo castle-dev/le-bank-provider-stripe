@@ -1,0 +1,44 @@
+{
+  "name": "le-bank-provider-stripe",
+  "version": "0.0.0",
+  "description": "A bridge connecting le-bank-service to Stripe",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/castle-dev/le-bank-provider-stripe.git"
+  },
+  "author": "Castle <castle-dev@entercastle.com> (http://entercastle.com/)",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/castle-dev/le-bank-provider-stripe/blob/develop/LICENSE-MIT"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/castle-dev/le-bank-provider-stripe/issues"
+  },
+  "devDependencies": {
+    "chai": "^2.2.0",
+    "chai-as-promised": "^5.0.0",
+    "gulp": "^3.8.11",
+    "gulp-bump": "^0.3.0",
+    "gulp-clean": "^0.3.1",
+    "gulp-coverage": "^0.3.34",
+    "gulp-git": "^1.2.3",
+    "gulp-jsdoc": "^0.1.4",
+    "gulp-mocha": "^2.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-tag-version": "^1.2.1",
+    "gulp-util": "^3.0.4",
+    "mocha": "^2.2.4",
+    "run-sequence": "^1.0.2",
+    "sinon": "^1.14.1",
+    "sinon-chai": "^2.7.0",
+    "travis-encrypt": "^1.1.1"
+  },
+  "dependencies": {
+  }
+}

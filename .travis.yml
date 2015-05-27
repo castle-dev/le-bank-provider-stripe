@@ -1,0 +1,21 @@
+language: node_js
+before_install:
+  - npm install -g gulp mocha
+  - npm install
+  - npm test
+install:
+  - 'git config --global user.email "travis-ci@entercastle.com"'
+  - 'git config --global user.name "Travis Castle"'
+script:
+  - gulp docs
+  - cd docs
+  - git init
+  - 'git remote add origin "https://${GH_TOKEN}@github.com/castle-dev/le-bank-provider-stripe.git"'
+  - git checkout -B gh-pages
+  - git add .
+  - 'git commit -m "Updating documentation"'
+  - 'git push origin gh-pages -fq > /dev/null'
+env:
+  global:
+    - ENVIRONMENT=staging
+    - secure: Udamxcd9GpcCFeIMT+MwUNDIt10JYyghVQv/FEfgYfbIzMEKeBTRCmJghP2uXSqc5reTlsc6p8pzRSRdxuK4bi7DmGJzhlMzvVJM0Dsw4vHW0T2CMgON2g/pLzrJnSaTvTkNzPaV47xqQx0EnGElVutoKoAhW/vPTui3mjGnIwWC/Zs8bFT0YsJhqf7RPcxDdmBnxGC9WrtMiWsdWsWNy+kMopMEIMAj0mSS79HJjrYSV4EXv7XyaYxTpCsNSCyoKRuzTVLBgr8n89zqlTmGCw5c+ftPcb2IgvBapQ0Q3NboKkHlRjmykqC9bZdhXzzzaY5UdZkTsr1CI1/06ORz22SsS9Zcqfj8dZ95ygJ1Esc97Uh5QrjooqOpJbkX3pLXXRBMUfb3QxbOhVE6IfhO/7eYDQ/BUNRPF3TQJ42kGbgiKkXNk0L1xyQOx1Vr2GG/h6j5eFWVOcYfPzhtCIvdUBdRq5hPtEbrecL3qSvR71NjZO4+9eVtD1BeImtVL/Y+2aDOy1XtajubGXQV4cniRI2Vma+ApsPxLncsr8LgrclDolCjpA5gh4xqDeJue4mcHkDDk+oKLWJS8GvlOhMrWiMKqwO2xAXsOf7A+0kF7TvcfsolWK3EzHCmmQovw+0Tt5WJ+HLnxI1mjzUMZtfdCiO+9lDxo2JQ3xJdAeSFPR4=

@@ -1,0 +1,7 @@
+node_modules
+docs
+reports
+debug
+.coverdata
+.coverrun
+.DS_Store
