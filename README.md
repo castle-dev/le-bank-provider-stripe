@@ -10,7 +10,10 @@ le-bank-provider-stripe
 ## Usage
 
 ```
-  //TODO
+  var stripeSecretKey = /* your api key */
+  var storage = /* initialize storage service */
+  var BankProvider = require('le-bank-provider-stripe');
+  var provider = new BankProvider(stripeSecretKey, );
 ```
 
 ## Tests
