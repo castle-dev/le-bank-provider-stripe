@@ -80,7 +80,7 @@ var BankProvider = function (secretKey, storage) {
    * Verifies that the user has access to the bank account using micro-deposits
    *
    * @function verifyBankAccount
-   * @memberof BankService
+   * @memberof BankProvider
    * @instance
    * @param {record} bankAccount the record of the bank account to be verified
    * @param {array} amounts the micro-deposit verification amounts
@@ -111,6 +111,34 @@ var BankProvider = function (secretKey, storage) {
         }
       });
       return deferred.promise;
+    });
+  };
+  /**
+   * Verifies that the user is who they say they are
+   *
+   * Basic verification requires the following properties on the identity object:
+   * - legal_entity.first_name
+   * - legal_entity.last_name
+   * - legal_entity.dob.day
+   * - legal_entity.dob.month
+   * - legal_entity.dob.year
+   * - legal_entity.type
+   * - tos_acceptance.ip
+   * - tos_acceptance.date
+   * @function verifyIdentity
+   * @memberof BankProvider
+   * @instance
+   * @param {record} bankAccount the record of the bank account to be verified
+   * @param {Object} identity the map of identity fields
+   * @returns {promise}
+   */
+  this.verifyIdentity = function (bankAccount, identity) {
+    console.log('verifying identity');
+    console.log(identity);
+    return bankAccount.load()
+    .then(function (data) {
+      var account = data._stripe.account_id;
+      return _api.accounts.update(account, identity);
     });
   };
   /**
