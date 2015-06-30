@@ -42,6 +42,6 @@
   "dependencies": {
     "q": "^1.4.1",
     "request": "^2.55.0",
-    "stripe": "^3.3.4"
+    "stripe": "^3.5.1"
   }
 }
