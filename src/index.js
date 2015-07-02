@@ -1,3 +1,5 @@
+var fs = require('fs');
+var path = require('path');
 var stripe = require('stripe');
 var q = require('q');
 var request = require('request');
@@ -130,16 +132,36 @@ var BankProvider = function (secretKey, storage) {
    * @instance
    * @param {record} bankAccount the record of the bank account to be verified
    * @param {Object} identity the map of identity fields
+   * @param {string} filepath (optional) path to uploaded image of government ID
    * @returns {promise}
    */
-  this.verifyIdentity = function (bankAccount, identity) {
-    console.log('verifying identity');
-    console.log(identity);
+  this.verifyIdentity = function (bankAccount, identity, filepath) {
+    var account;
     return bankAccount.load()
     .then(function (data) {
-      var account = data._stripe.account_id;
-      return _api.accounts.update(account, identity);
-    });
+      account = data._stripe.account_id;
+      var promise = _api.accounts.update(account, identity);
+      if (filepath) {
+        var filename = path.basename(filepath);
+        promise.then(function () {
+          return _api.fileUploads.create({
+            purpose: 'identity_document',
+            file: {
+              data: fs.readFileSync(filepath),
+              name: filename,
+              type: 'application/octet-stream'
+            }
+          },
+          { stripe_account: account });
+        })
+        .then(function (file) {
+          var fileID = file.id;
+          return _api.accounts.update(account,
+            { legal_entity: { verification: { document: fileID } } });
+        });
+      }
+      return promise;
+    })
   };
   /**
    * Charges a stripe customer
