@@ -164,6 +164,44 @@ var BankProvider = function (secretKey, storage) {
     })
   };
   /**
+   * Checks that the verification process was successful
+   * @function isIdentityVerified
+   * @memberof BankProvider
+   * @instance
+   * @param {record} bankAccount the record of the bank account to be verified
+   * @returns {promise}
+   */
+  this.isIdentityVerified = function (bankAccount) {
+    var account;
+    return bankAccount.load()
+    .then(function (data) {
+      account = data._stripe.account_id;
+      return _api.accounts.retrieve(account);
+    })
+    .then(function (data) {
+      if (data &&
+          data.legal_entity &&
+          data.legal_entity.verification &&
+          data.legal_entity.verification.status) {
+        var verification = data.legal_entity.verification;
+        var status = verification.status;
+        if (status === 'verified') {
+          return;
+        } else if (status === 'pending') {
+          return q.reject(new Error('Identity verification pending'));
+        } else if (status === 'unverified') {
+          if (verification.details) {
+            return q.reject(new Error(verification.details));
+          } else {
+            return q.reject(new Error('Identity unverified, reason unknown'));
+          }
+        }
+      } else {
+        return q.reject(new Error('Identity verification status missing from Stripe account'));
+      }
+    });
+  };
+  /**
    * Charges a stripe customer
    * @function chargeCustomer
    * @memberof BankProvider
@@ -210,7 +248,7 @@ var BankProvider = function (secretKey, storage) {
       if (data.verifiedAt) {
         customer = data._stripe.customer_id;
         return _provider.chargeCustomer(customer, cents);
-      } else { return q.reject('Bank accounts must be verified before they can be charged'); }
+      } else { return q.reject(new Error('Bank accounts must be verified before they can be charged')); }
     })
     .then(function (charge) {
       payment = storage.createRecord('Payment');
