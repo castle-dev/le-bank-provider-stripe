@@ -10,9 +10,13 @@ var request = require('request');
  * @param {StorageService} storage an instance of le-storage-service that is used to create records
  * @returns {service}
  */
-var BankProvider = function (secretKey, storage) {
-  if (!secretKey) { throw new Error('Secret key required'); }
-  if (!storage) { throw new Error('Storage service required'); }
+var BankProvider = function(secretKey, storage) {
+  if (!secretKey) {
+    throw new Error('Secret key required');
+  }
+  if (!storage) {
+    throw new Error('Storage service required');
+  }
   var _provider = this;
   var _api = stripe(secretKey);
   /**
@@ -27,31 +31,40 @@ var BankProvider = function (secretKey, storage) {
    * @param {string} countryCode the two letter country code of the bank's origin
    * @param {string} creditToken the tokenized bank account info
    * @param {string} debitToken the tokenized bank account info
+   * @param {string} email the email to assocaite with the stripe customer
    * @returns {promise} resolves with the newly created bankAccount record
    */
-  this.createBankAccount = function (countryCode, creditToken, debitToken) {
+  this.createBankAccount = function(countryCode, creditToken, debitToken, email) {
     var bankAccount;
     var promises = [];
-    promises.push(_api.accounts.create({
-      managed: true,
-      country: countryCode,
-      bank_account: creditToken
-    }));
-    promises.push(_api.customers.create({
-      bank_account: debitToken
-    }));
+    var accountData = {};
+    accountData.managed = true;
+    accountData.country = countryCode;
+    accountData.bank_account = creditToken;
+    if (email) {
+      accountData.email = email;
+    }
+    promises.push(_api.accounts.create(accountData));
+    var customerData = {};
+    customerData.bank_account = debitToken;
+    if (email) {
+      customerData.email = email;
+    }
+    promises.push(_api.customers.create(customerData));
     return q.all(promises)
-    .spread(function (account, customer) {
-      bankAccount = storage.createRecord('Bank Account');
-      return bankAccount.update({
-        _stripe: {
-          customer_id: customer.id,
-          account_id: account.id,
-          bankAccount_id: customer.default_source
-        }
+      .spread(function(account, customer) {
+        bankAccount = storage.createRecord('Bank Account');
+        return bankAccount.update({
+          _stripe: {
+            customer_id: customer.id,
+            account_id: account.id,
+            bankAccount_id: customer.default_source
+          }
+        });
+      })
+      .then(function() {
+        return bankAccount
       });
-    })
-    .then(function () { return bankAccount });
   };
   /**
    * Creates a credit card
@@ -59,24 +72,28 @@ var BankProvider = function (secretKey, storage) {
    * @memberof BankProvider
    * @instance
    * @param {string} token the tokenized credit card info
+   * @param {string} email the email to assocaite with the stripe customer
    * @returns {promise} resolves with the newly created creditCard record
    */
-  this.createCreditCard = function (token) {
-    return _api.customers.create({
-      card: token
-    })
-    .then(function (customer) {
-      var creditCard = storage.createRecord('Credit Card');
-      return creditCard.update({
-        _stripe: {
-          customer_id: customer.id,
-          creditCard_id: customer.default_source
-        }
-      })
-      .then(function () {
-        return creditCard;
+  this.createCreditCard = function(token, email) {
+    var customerData = {};
+    customerData.card = token;
+    if (email) {
+      customerData.email = email;
+    }
+    return _api.customers.create(customerData)
+      .then(function(customer) {
+        var creditCard = storage.createRecord('Credit Card');
+        return creditCard.update({
+            _stripe: {
+              customer_id: customer.id,
+              creditCard_id: customer.default_source
+            }
+          })
+          .then(function() {
+            return creditCard;
+          });
       });
-    });
   };
   /**
    * Verifies that the user has access to the bank account using micro-deposits
@@ -88,32 +105,40 @@ var BankProvider = function (secretKey, storage) {
    * @param {array} amounts the micro-deposit verification amounts
    * @returns {promise}
    */
-  this.verifyBankAccount = function (bankAccount, amounts) {
+  this.verifyBankAccount = function(bankAccount, amounts) {
     return bankAccount.load()
-    .then(function (data) {
-      var customer = data._stripe.customer_id;
-      var id = data._stripe.bankAccount_id;
-      var deferred = q.defer();
-      // node client doesn't support verifying bank accounts, so we must make the HTTP request ourselves :/
-      var url = 'https://api.stripe.com/v1/customers/' + customer + '/bank_accounts/' + id + '/verify';
-      var options = {
-        url: url,
-        auth: { 'bearer': secretKey },
-        form: { amounts: amounts },
-        qsStringifyOptions: { arrayFormat: 'brackets' }
-      };
-      request.post(options, function (err, resp) {
-        if (!err && resp.statusCode == 200) {
-          data.verifiedAt = new Date();
-          bankAccount.update(data)
-          .then(function () { deferred.resolve(); })
-        } else {
-          errMessage = JSON.parse(resp.body).error.message;
-          deferred.reject(errMessage);
-        }
+      .then(function(data) {
+        var customer = data._stripe.customer_id;
+        var id = data._stripe.bankAccount_id;
+        var deferred = q.defer();
+        // node client doesn't support verifying bank accounts, so we must make the HTTP request ourselves :/
+        var url = 'https://api.stripe.com/v1/customers/' + customer + '/bank_accounts/' + id + '/verify';
+        var options = {
+          url: url,
+          auth: {
+            'bearer': secretKey
+          },
+          form: {
+            amounts: amounts
+          },
+          qsStringifyOptions: {
+            arrayFormat: 'brackets'
+          }
+        };
+        request.post(options, function(err, resp) {
+          if (!err && resp.statusCode == 200) {
+            data.verifiedAt = new Date();
+            bankAccount.update(data)
+              .then(function() {
+                deferred.resolve();
+              })
+          } else {
+            errMessage = JSON.parse(resp.body).error.message;
+            deferred.reject(errMessage);
+          }
+        });
+        return deferred.promise;
       });
-      return deferred.promise;
-    });
   };
   /**
    * Verifies that the user is who they say they are
@@ -135,33 +160,39 @@ var BankProvider = function (secretKey, storage) {
    * @param {string} filepath (optional) path to uploaded image of government ID
    * @returns {promise}
    */
-  this.verifyIdentity = function (bankAccount, identity, filepath) {
+  this.verifyIdentity = function(bankAccount, identity, filepath) {
     var account;
     return bankAccount.load()
-    .then(function (data) {
-      account = data._stripe.account_id;
-      var promise = _api.accounts.update(account, identity);
-      if (filepath) {
-        var filename = path.basename(filepath);
-        promise.then(function () {
-          return _api.fileUploads.create({
-            purpose: 'identity_document',
-            file: {
-              data: fs.readFileSync(filepath),
-              name: filename,
-              type: 'application/octet-stream'
-            }
-          },
-          { stripe_account: account });
-        })
-        .then(function (file) {
-          var fileID = file.id;
-          return _api.accounts.update(account,
-            { legal_entity: { verification: { document: fileID } } });
-        });
-      }
-      return promise;
-    })
+      .then(function(data) {
+        account = data._stripe.account_id;
+        var promise = _api.accounts.update(account, identity);
+        if (filepath) {
+          var filename = path.basename(filepath);
+          promise.then(function() {
+            return _api.fileUploads.create({
+              purpose: 'identity_document',
+              file: {
+                data: fs.readFileSync(filepath),
+                name: filename,
+                type: 'application/octet-stream'
+              }
+            }, {
+              stripe_account: account
+            });
+          })
+            .then(function(file) {
+              var fileID = file.id;
+              return _api.accounts.update(account, {
+                legal_entity: {
+                  verification: {
+                    document: fileID
+                  }
+                }
+              });
+            });
+        }
+        return promise;
+      })
   };
   /**
    * Checks that the verification process was successful
@@ -171,35 +202,35 @@ var BankProvider = function (secretKey, storage) {
    * @param {record} bankAccount the record of the bank account to be verified
    * @returns {promise}
    */
-  this.isIdentityVerified = function (bankAccount) {
+  this.isIdentityVerified = function(bankAccount) {
     var account;
     return bankAccount.load()
-    .then(function (data) {
-      account = data._stripe.account_id;
-      return _api.accounts.retrieve(account);
-    })
-    .then(function (data) {
-      if (data &&
+      .then(function(data) {
+        account = data._stripe.account_id;
+        return _api.accounts.retrieve(account);
+      })
+      .then(function(data) {
+        if (data &&
           data.legal_entity &&
           data.legal_entity.verification &&
           data.legal_entity.verification.status) {
-        var verification = data.legal_entity.verification;
-        var status = verification.status;
-        if (status === 'verified') {
-          return;
-        } else if (status === 'pending') {
-          return q.reject(new Error('Identity verification pending'));
-        } else if (status === 'unverified') {
-          if (verification.details) {
-            return q.reject(new Error(verification.details));
-          } else {
-            return q.reject(new Error('Identity unverified, reason unknown'));
+          var verification = data.legal_entity.verification;
+          var status = verification.status;
+          if (status === 'verified') {
+            return;
+          } else if (status === 'pending') {
+            return q.reject(new Error('Identity verification pending'));
+          } else if (status === 'unverified') {
+            if (verification.details) {
+              return q.reject(new Error(verification.details));
+            } else {
+              return q.reject(new Error('Identity unverified, reason unknown'));
+            }
           }
+        } else {
+          return q.reject(new Error('Identity verification status missing from Stripe account'));
         }
-      } else {
-        return q.reject(new Error('Identity verification status missing from Stripe account'));
-      }
-    });
+      });
   };
   /**
    * Charges a stripe customer
@@ -211,7 +242,7 @@ var BankProvider = function (secretKey, storage) {
    * @param {string} account (optional) the id of the stripe account to credit
    * @returns {promise}
    */
-  this.chargeCustomer = function (customer, cents, account) {
+  this.chargeCustomer = function(customer, cents, account) {
     var promise;
     if (account) {
       promise = _api.charges.create({
@@ -240,26 +271,31 @@ var BankProvider = function (secretKey, storage) {
    * @param {number} cents the numbers of cents to charge
    * @returns {promise} resolves with the newly created payment record
    */
-  this.chargeBankAccount = function (bankAccount, cents) {
+  this.chargeBankAccount = function(bankAccount, cents) {
     var customer;
     var payment;
     return bankAccount.load()
-    .then(function (data) {
-      if (data.verifiedAt) {
-        customer = data._stripe.customer_id;
-        return _provider.chargeCustomer(customer, cents);
-      } else { return q.reject(new Error('Bank accounts must be verified before they can be charged')); }
-    })
-    .then(function (charge) {
-      payment = storage.createRecord('Payment');
-      return payment.update({
-        cents: cents,
-        _stripe: { customer_id: customer, charge_id: charge.id }
+      .then(function(data) {
+        if (data.verifiedAt) {
+          customer = data._stripe.customer_id;
+          return _provider.chargeCustomer(customer, cents);
+        } else {
+          return q.reject(new Error('Bank accounts must be verified before they can be charged'));
+        }
+      })
+      .then(function(charge) {
+        payment = storage.createRecord('Payment');
+        return payment.update({
+          cents: cents,
+          _stripe: {
+            customer_id: customer,
+            charge_id: charge.id
+          }
+        });
+      })
+      .then(function() {
+        return payment;
       });
-    })
-    .then(function () {
-      return payment;
-    });
   };
   /**
    * Charges a credit card
@@ -270,24 +306,27 @@ var BankProvider = function (secretKey, storage) {
    * @param {number} cents the numbers of cents to charge
    * @returns {promise} resolves with the newly created payment record
    */
-  this.chargeCreditCard = function (card, cents) {
+  this.chargeCreditCard = function(card, cents) {
     var customer;
     var payment;
     return card.load()
-    .then(function (data) {
-      customer = data._stripe.customer_id;
-      return _provider.chargeCustomer(customer, cents);
-    })
-    .then(function (charge) {
-      payment = storage.createRecord('Payment');
-      return payment.update({
-        cents: cents,
-        _stripe: { customer_id: customer, charge_id: charge.id }
+      .then(function(data) {
+        customer = data._stripe.customer_id;
+        return _provider.chargeCustomer(customer, cents);
+      })
+      .then(function(charge) {
+        payment = storage.createRecord('Payment');
+        return payment.update({
+          cents: cents,
+          _stripe: {
+            customer_id: customer,
+            charge_id: charge.id
+          }
+        });
+      })
+      .then(function() {
+        return payment;
       });
-    })
-    .then(function () {
-      return payment;
-    });
   };
   /**
    * Transfers money from a funding source to a bank account
@@ -299,29 +338,33 @@ var BankProvider = function (secretKey, storage) {
    * @param {number} cents the number of cents to transfer
    * @returns {promise} resolves with the newly created payment record
    */
-  this.transfer = function (source, destination, cents) {
+  this.transfer = function(source, destination, cents) {
     var customer;
     var account;
     var payment;
     return source.load()
-    .then(function (data) {
-      customer = data._stripe.customer_id;
-      return destination.load();
-    })
-    .then(function (data) {
-      account = data._stripe.account_id;
-      return _provider.chargeCustomer(customer, cents, account);
-    })
-    .then(function (charge) {
-      payment = storage.createRecord('Payment');
-      return payment.update({
-        cents: cents,
-        _stripe: { customer_id: customer, account_id: account, charge_id: charge.id }
+      .then(function(data) {
+        customer = data._stripe.customer_id;
+        return destination.load();
+      })
+      .then(function(data) {
+        account = data._stripe.account_id;
+        return _provider.chargeCustomer(customer, cents, account);
+      })
+      .then(function(charge) {
+        payment = storage.createRecord('Payment');
+        return payment.update({
+          cents: cents,
+          _stripe: {
+            customer_id: customer,
+            account_id: account,
+            charge_id: charge.id
+          }
+        });
+      })
+      .then(function() {
+        return payment;
       });
-    })
-    .then(function () {
-      return payment;
-    });
   };
   /**
    * Returns a bank account record, given the id
@@ -331,7 +374,7 @@ var BankProvider = function (secretKey, storage) {
    * @param {string} id the id of the bank account record
    * @returns {record}
    */
-  this.getBankAccount = function (id) {
+  this.getBankAccount = function(id) {
     return storage.createRecord('Bank Account', id);
   }
   /**
@@ -342,7 +385,7 @@ var BankProvider = function (secretKey, storage) {
    * @param {string} id the id of the credit card record
    * @returns {record}
    */
-  this.getCreditCard = function (id) {
+  this.getCreditCard = function(id) {
     return storage.createRecord('Credit Card', id);
   }
 };
