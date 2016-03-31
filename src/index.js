@@ -254,6 +254,7 @@ var BankProvider = function(secretKey, storage) {
         amount: cents,
         currency: 'usd',
         customer: customer,
+        expand: ['transfer'],
         destination: accountID,
         description: description
       }).then(function(returnedCharge){
@@ -263,7 +264,7 @@ var BankProvider = function(secretKey, storage) {
           currency: 'usd',
           destination: 'default_for_currency',
           description: description,
-          source_transaction: charge.id
+          source_transaction: charge.transfer.destination_payment
         }, {
           stripe_account: accountID
         });
