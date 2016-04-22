@@ -239,7 +239,7 @@ var BankProvider = function(secretKey, storage) {
    * @instance
    * @param {string} customer the id of the stripe customer to charge
    * @param {number} cents the numbers of cents to charge
-   * @param {string} accountID (optional) the id of the stripe account to credit, bankAccountID required if set
+   * @param {string} accountID (optional) the id of the stripe account to credit
    * @param {string} description intended for end users to read, such as in a bank statement
    * @returns {promise}
    */
@@ -257,19 +257,6 @@ var BankProvider = function(secretKey, storage) {
         expand: ['transfer'],
         destination: accountID,
         description: description
-      }).then(function(returnedCharge){
-        charge = returnedCharge;
-        return _api.transfers.create({
-          amount: cents,
-          currency: 'usd',
-          destination: 'default_for_currency',
-          description: description,
-          source_transaction: charge.transfer.destination_payment
-        }, {
-          stripe_account: accountID
-        });
-      }).then(function(){
-        return charge;
       });
     } else {
       promise = _api.charges.create({
