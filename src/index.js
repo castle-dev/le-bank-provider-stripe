@@ -239,25 +239,31 @@ var BankProvider = function(secretKey, storage) {
    * @instance
    * @param {string} customer the id of the stripe customer to charge
    * @param {number} cents the numbers of cents to charge
-   * @param {string} account (optional) the id of the stripe account to credit
+   * @param {string} accountID (optional) the id of the stripe account to credit
+   * @param {string} description intended for end users to read, such as in a bank statement
    * @returns {promise}
    */
-  this.chargeCustomer = function(customer, cents, account) {
+  this.chargeCustomer = function (customer, cents, accountID, description) {
+    if (!description) {
+      description = 'Castle';
+    }
     var promise;
-    if (account) {
+    if (accountID) {
+      var charge;
       promise = _api.charges.create({
         amount: cents,
         currency: 'usd',
         customer: customer,
-        destination: account,
-        description: 'Castle'
+        expand: ['transfer'],
+        destination: accountID,
+        description: description
       });
     } else {
       promise = _api.charges.create({
         amount: cents,
         currency: 'usd',
         customer: customer,
-        description: 'Castle'
+        description: description
       });
     }
     return promise;
@@ -336,11 +342,12 @@ var BankProvider = function(secretKey, storage) {
    * @param {record} source the record of the credit card or bank account to be charged
    * @param {record} destination the record of the bank account to be credited
    * @param {number} cents the number of cents to transfer
+   * @param {string} description intended for end users to read, such as in a bank statement
    * @returns {promise} resolves with the newly created payment record
    */
-  this.transfer = function(source, destination, cents) {
+  this.transfer = function(source, destination, cents, description) {
     var customer;
-    var account;
+    var accountID;
     var payment;
     return source.load()
       .then(function(data) {
@@ -348,8 +355,8 @@ var BankProvider = function(secretKey, storage) {
         return destination.load();
       })
       .then(function(data) {
-        account = data._stripe.account_id;
-        return _provider.chargeCustomer(customer, cents, account);
+        accountID = data._stripe.account_id;
+        return _provider.chargeCustomer(customer, cents, accountID, description);
       })
       .then(function(charge) {
         payment = storage.createRecord('Payment');
@@ -357,7 +364,7 @@ var BankProvider = function(secretKey, storage) {
           cents: cents,
           _stripe: {
             customer_id: customer,
-            account_id: account,
+            account_id: accountID,
             charge_id: charge.id
           }
         });
