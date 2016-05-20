@@ -41,6 +41,9 @@ var BankProvider = function(secretKey, storage) {
     accountData.managed = true;
     accountData.country = countryCode;
     accountData.bank_account = creditToken;
+    accountData.transfer_schedule = {
+        'interval': 'manual'
+    };
     if (email) {
       accountData.email = email;
     }
