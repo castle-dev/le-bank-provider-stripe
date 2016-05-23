@@ -1,0 +1,2198 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Documentation Class: BankProvider</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cyborg.css">
+
+</head>
+
+<body>
+<div class="container-fluid">
+	<div class="navbar navbar-fixed-top ">
+		<div class="navbar-inner">
+			<a class="brand" href="index.html">Documentation</a>
+			<ul class="nav">
+				
+				<li class="dropdown">
+					<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="BankProvider.html">BankProvider</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+			</ul>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+
+		
+		<div class="span8">
+			
+				<div id="main">
+					
+
+
+	<h1 class="page-title">Class: BankProvider</h1>
+<section>
+
+<header>
+    <h2>
+    BankProvider
+    </h2>
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+
+    
+        
+<dt>
+    <h4 class="name" id="BankProvider"><span class="type-signature"></span>new BankProvider<span class="signature">(secretKey, storage)</span><span class="type-signature"> &rarr; {service}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        A bridge connecting le-bank-service to Stripe
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>secretKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the stripe secret key for your account</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>storage</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">StorageService</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">an instance of le-storage-service that is used to create records</td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">service</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<dt>
+    <h4 class="name" id="chargeBankAccount"><span class="type-signature"></span>chargeBankAccount<span class="signature">(bankAccount, cents)</span><span class="type-signature"> &rarr; {promise}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Charges a bank account
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>bankAccount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">record</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the record of the bank account to be charged</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>cents</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the numbers of cents to charge</td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    resolves with the newly created payment record
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">promise</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="chargeCreditCard"><span class="type-signature"></span>chargeCreditCard<span class="signature">(card, cents)</span><span class="type-signature"> &rarr; {promise}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Charges a credit card
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>card</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">record</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the record of the credit card to be charged</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>cents</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the numbers of cents to charge</td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    resolves with the newly created payment record
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">promise</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="chargeCustomer"><span class="type-signature"></span>chargeCustomer<span class="signature">(customer, cents, accountID, description)</span><span class="type-signature"> &rarr; {promise}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Charges a stripe customer
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>customer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the id of the stripe customer to charge</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>cents</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the numbers of cents to charge</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>accountID</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">(optional) the id of the stripe account to credit</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>description</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">intended for end users to read, such as in a bank statement</td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">promise</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="createBankAccount"><span class="type-signature"></span>createBankAccount<span class="signature">(countryCode, creditToken, debitToken, email)</span><span class="type-signature"> &rarr; {promise}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Creates a bank account
+
+Requires two tokens, one for crediting the bank account
+and one for debiting the bank account. Simply generate
+two tokens with the same bank account credentials.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>countryCode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the two letter country code of the bank's origin</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>creditToken</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the tokenized bank account info</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>debitToken</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the tokenized bank account info</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>email</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the email to assocaite with the stripe customer</td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    resolves with the newly created bankAccount record
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">promise</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="createCreditCard"><span class="type-signature"></span>createCreditCard<span class="signature">(token, email)</span><span class="type-signature"> &rarr; {promise}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Creates a credit card
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>token</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the tokenized credit card info</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>email</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the email to assocaite with the stripe customer</td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    resolves with the newly created creditCard record
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">promise</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getBankAccount"><span class="type-signature"></span>getBankAccount<span class="signature">(id)</span><span class="type-signature"> &rarr; {record}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns a bank account record, given the id
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the id of the bank account record</td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">record</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getCreditCard"><span class="type-signature"></span>getCreditCard<span class="signature">(id)</span><span class="type-signature"> &rarr; {record}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns a credit card record, given the id
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the id of the credit card record</td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">record</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="isIdentityVerified"><span class="type-signature"></span>isIdentityVerified<span class="signature">(bankAccount)</span><span class="type-signature"> &rarr; {promise}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Checks that the verification process was successful
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>bankAccount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">record</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the record of the bank account to be verified</td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">promise</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="transfer"><span class="type-signature"></span>transfer<span class="signature">(source, destination, cents, description)</span><span class="type-signature"> &rarr; {promise}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Transfers money from a funding source to a bank account
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>source</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">record</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the record of the credit card or bank account to be charged</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>destination</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">record</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the record of the bank account to be credited</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>cents</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the number of cents to transfer</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>description</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">intended for end users to read, such as in a bank statement</td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    resolves with the newly created payment record
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">promise</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="verifyBankAccount"><span class="type-signature"></span>verifyBankAccount<span class="signature">(bankAccount, amounts)</span><span class="type-signature"> &rarr; {promise}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Verifies that the user has access to the bank account using micro-deposits
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>bankAccount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">record</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the record of the bank account to be verified</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>amounts</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the micro-deposit verification amounts</td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">promise</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="verifyIdentity"><span class="type-signature"></span>verifyIdentity<span class="signature">(bankAccount, identity, filepath)</span><span class="type-signature"> &rarr; {promise}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Verifies that the user is who they say they are
+
+Basic verification requires the following properties on the identity object:
+- legal_entity.first_name
+- legal_entity.last_name
+- legal_entity.dob.day
+- legal_entity.dob.month
+- legal_entity.dob.year
+- legal_entity.type
+- tos_acceptance.ip
+- tos_acceptance.date
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>bankAccount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">record</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the record of the bank account to be verified</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>identity</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the map of identity fields</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>filepath</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">(optional) path to uploaded image of government ID</td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">promise</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+				</div>
+
+				<div class="clearfix"></div>
+				<footer>
+					
+					
+		<span class="jsdoc-message">
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a>
+		on 2016-05-23T03:14:13+00:00 using the <a
+			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		</span>
+				</footer>
+			</div>
+
+			
+			<div class="span3">
+				<div id="toc"></div>
+			</div>
+			
+			<br clear="both">
+		</div>
+
+	</div>
+	<!--<script src="scripts/sunlight.js"></script>-->
+	<script src="scripts/docstrap.lib.js"></script>
+	<script src="scripts/bootstrap-dropdown.js"></script>
+	<script src="scripts/toc.js"></script>
+
+	<script>
+		$( function () {
+			$( "[id*='$']" ).each( function () {
+				var $this = $( this );
+
+				$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+			} );
+
+			$( "#toc" ).toc( {
+				anchorName  : function ( i, heading, prefix ) {
+					return $( heading ).attr( "id" ) || ( prefix + i );
+				},
+				selectors   : "h1,h2,h3,h4",
+				showAndHide : false,
+				scrollTo    : "100px"
+			} );
+
+			$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+			$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+			$( '.dropdown-toggle' ).dropdown();
+//			$( ".tutorial-section pre, .readme-section pre" ).addClass( "sunlight-highlight-javascript" ).addClass( "linenums" );
+
+			$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+				var $this = $( this );
+
+				var example = $this.find( "code" );
+				exampleText = example.html();
+				var lang = /{@lang (.*?)}/.exec( exampleText );
+				if ( lang && lang[1] ) {
+					exampleText = exampleText.replace( lang[0], "" );
+					example.html( exampleText );
+					lang = lang[1];
+				} else {
+					lang = "javascript";
+				}
+
+				if ( lang ) {
+
+					$this
+						.addClass( "sunlight-highlight-" + lang )
+						.addClass( "linenums" )
+						.html( example.html() );
+
+				}
+			} );
+
+			Sunlight.highlightAll( {
+				lineNumbers : false,
+				showMenu : true,
+				enableDoclinks : true
+			} );
+		} );
+	 </script>
+
+
+
+	<!--Navigation and Symbol Display-->
+	
+
+
+	<!--Google Analytics-->
+	
+
+</body>
+</html>
