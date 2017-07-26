@@ -32,9 +32,10 @@ var BankProvider = function(secretKey, storage) {
    * @param {string} creditToken the tokenized bank account info
    * @param {string} debitToken the tokenized bank account info
    * @param {string} email the email to assocaite with the stripe customer
+   * @param {string} id (optional) the ID to use for the new bank account
    * @returns {promise} resolves with the newly created bankAccount record
    */
-  this.createBankAccount = function(countryCode, creditToken, debitToken, email) {
+  this.createBankAccount = function(countryCode, creditToken, debitToken, email, bankAccountID) {
     var bankAccount;
     var promises = [];
     var accountData = {};
@@ -56,7 +57,11 @@ var BankProvider = function(secretKey, storage) {
     promises.push(_api.customers.create(customerData));
     return q.all(promises)
       .spread(function(account, customer) {
-        bankAccount = storage.createRecord('Bank Account');
+        if (bankAccountID) {
+          bankAccount = storage.createRecord('Bank Account', bankAccountID);
+        } else {
+          bankAccount = storage.createRecord('Bank Account');
+        }
         return bankAccount.update({
           _stripe: {
             customer_id: customer.id,
